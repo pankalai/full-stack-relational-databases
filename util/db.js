@@ -1,12 +1,14 @@
 const Sequelize = require('sequelize')
-const { DATABASE_URL } = require('./config')
+const { DATABASE_URL, TEST_DATABASE_URL, TESTING } = require('./config')
 
-const sequelize = new Sequelize(process.env.DATABASE_URL, {
+const db_url = TESTING ? TEST_DATABASE_URL : DATABASE_URL
+
+const sequelize = new Sequelize(db_url, {
   // dialectOptions: {
-	// 		ssl: {
+  //   ssl: {
 	// 		require: true,
 	// 		rejectUnauthorized: false
-	// 		}
+  //   }
 	// },
 	dialect: 'postgres',
 })
@@ -14,9 +16,9 @@ const sequelize = new Sequelize(process.env.DATABASE_URL, {
 const connectToDatabase = async () => {
   try {
     await sequelize.authenticate()
-    console.log('connected to the database')
+    console.log('connected to the database', db_url)
   } catch (err) {
-    console.log('failed to connect to the database')
+    console.log('failed to connect to the database', db_url)
     return process.exit(1)
   }
 
