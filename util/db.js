@@ -4,13 +4,13 @@ const { DATABASE_URL, TEST_DATABASE_URL, TESTING } = require('./config')
 const db_url = TESTING ? TEST_DATABASE_URL : DATABASE_URL
 
 const sequelize = new Sequelize(db_url, {
-  // dialectOptions: {
-  //   ssl: {
-	// 		require: true,
-	// 		rejectUnauthorized: false
-  //   }
-	// },
-	dialect: 'postgres',
+  dialectOptions: {
+    ssl: {
+			require: true,
+			rejectUnauthorized: false
+    }
+	},
+	//dialect: 'postgres',
 })
 
 const connectToDatabase = async () => {
