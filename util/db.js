@@ -1,7 +1,10 @@
 const Sequelize = require('sequelize')
 const { DATABASE_URL, TEST_DATABASE_URL, TESTING } = require('./config')
 
-const db_url = TESTING ? TEST_DATABASE_URL : DATABASE_URL
+const db_url = 
+  TESTING || TEST_DATABASE_URL 
+    ? TEST_DATABASE_URL 
+    : DATABASE_URL
 
 const sequelize = new Sequelize(db_url, {
   dialectOptions: {
