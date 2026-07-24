@@ -40,7 +40,13 @@ app.use(errorHandler)
 
 
 const start = async () => {
+  console.log('Starting application...')
+  console.log('DB URL:', db_url)
+
   await connectToDatabase()
+
+  console.log('Database connected')
+
   app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`)
   })

@@ -7,13 +7,13 @@ const db_url =
     : DATABASE_URL
 
 const sequelize = new Sequelize(db_url, {
-  dialectOptions: {
-    ssl: {
-			require: true,
-			rejectUnauthorized: false
-    }
-	},
-	//dialect: 'postgres',
+  // dialectOptions: {
+  //   ssl: {
+	// 		require: true,
+	// 		rejectUnauthorized: false
+  //   }
+	// },
+	dialect: 'postgres',
 })
 
 const connectToDatabase = async () => {
