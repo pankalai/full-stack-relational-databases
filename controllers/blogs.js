@@ -4,47 +4,10 @@ const jwt = require('jsonwebtoken')
 const { Op } = require('sequelize')
 
 const { Blog, User } = require('../models')
-const { SECRET } = require('../util/config')
 
+const { userExtractor } = require('../middleware/userExtractor')
+const { blogFinder } = require('../middleware/blogFinder')
 
-const blogFinder = async (req, res, next) => {
-  try {
-		const blog = await Blog.findByPk(req.params.id)
-    
-		if (!blog) {
-			const error = new Error('Blog not found')
-			error.status = 404
-			return next(error)
-    }
-		req.blog = blog
-    return next()
-	} catch (error) {
-		next(error)
-	}
-}
-
-const userExtractor = async (req, res, next) => {
-  const authorization = req.get('authorization')
-  if (authorization && authorization.toLowerCase().startsWith('bearer ')) {
-    try {
-      const decodedToken = jwt.verify(authorization.substring(7), SECRET)
-
-			const user = await User.findByPk(decodedToken.id)
-
-			if (!user) {
-				return res.status(401).json({ error: 'user not found' })
-			}
-
-			req.user = user
-    } catch (error) {
-      return res.status(401).json({ error: 'token invalid' })
-    }
-  } else {
-    return res.status(401).json({ error: 'token missing' })
-  }
-
-  next()
-}
 
 router.get('/', async (req, res) => {
 	const where = {}
@@ -82,11 +45,16 @@ router.get('/', async (req, res) => {
 })
 
 router.post('/', userExtractor, async (req, res, next) => {
-	const blog = await Blog.create({...req.body, UserId: req.user.id})
-	res.json(blog)
+	try {
+		const blog = await Blog.create({...req.body, userId: req.user.id})
+		res.json(blog)
+	} catch(error) {
+		console.log(error)
+		next(error)
+	}
 })
 
-router.put('/:id', blogFinder, async (req, res, next) => {
+router.put('/:id', blogFinder(req => req.params.id), async (req, res, next) => {
 	try {
 		if (!Number.isInteger(req.body?.likes)) {
 			const error = new Error("Missing or invalid 'likes' value")
@@ -101,7 +69,7 @@ router.put('/:id', blogFinder, async (req, res, next) => {
 	}
 })
 
-router.delete('/:id', userExtractor, blogFinder, async (req, res, next) => {
+router.delete('/:id', userExtractor, blogFinder(req => req.params.id), async (req, res, next) => {
 	if (req.blog.UserId !== req.user.id) {
 			const error = new Error("Not allowed to delete")
 			error.status = 401
