@@ -8,7 +8,7 @@ const errorHandler = (err, req, res, next) => {
 	}
 
 	if (err.name === 'SequelizeUniqueConstraintError') {
-		return res.status(400).json({ error: 'Username already exists' })
+		return res.status(400).json({ error: 'Data already exists' })
 	}
 
 	if (err.status) {
