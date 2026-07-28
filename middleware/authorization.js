@@ -3,11 +3,11 @@ const { SECRET } = require('../util/config')
 const { User, Session } = require('../models')
 
 const authorization = async (req, res, next) => {
-  const authorization = req.get('authorization')
+  const authHeader = req.get('authorization')
 
   if (
-    !authorization ||
-    !authorization.toLowerCase().startsWith('bearer ')
+    !authHeader ||
+    !authHeader.toLowerCase().startsWith('bearer ')
   ) {
     return res.status(401).json({
       error: 'token required'
@@ -16,7 +16,7 @@ const authorization = async (req, res, next) => {
   
   try {
 
-    const token = authorization.substring(7)
+    const token = authHeader.substring(7)
     const decodedToken = jwt.verify(token, SECRET)
 
     const session = await Session.findOne({
@@ -46,11 +46,12 @@ const authorization = async (req, res, next) => {
     req.sessionRecord = session
     req.user = user
 
+    next()
+
   } catch (error) {
     return res.status(401).json({ error: 'token invalid' })
   }
 
-  next()
 }
 
 

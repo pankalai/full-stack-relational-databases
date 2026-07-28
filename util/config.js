@@ -6,6 +6,5 @@ module.exports = {
   TESTING: process.env.TESTING || 'false' === 'true',
   PORT: process.env.PORT || 3001,
   SECRET: process.env.SECRET,
-  SESSION_SECRET: process.env.SESSION_SECRET,
   NODE_ENV: process.env.NODE_ENV || 'development'
 }
