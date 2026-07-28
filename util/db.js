@@ -4,7 +4,7 @@ const { Umzug, SequelizeStorage } = require('umzug')
 const { DATABASE_URL, TEST_DATABASE_URL, TESTING } = require('./config')
 
 const db_url = 
-  TESTING || TEST_DATABASE_URL 
+  TESTING && TEST_DATABASE_URL 
     ? TEST_DATABASE_URL 
     : DATABASE_URL
 

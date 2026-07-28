@@ -22,13 +22,19 @@ ReadingList.init({
   },
   read: {
     type: DataTypes.BOOLEAN,
-    default: false
+    defaultValue: false
     }
 }, {
   sequelize,
   underscored: true,
   timestamps: false,
-  modelName: 'reading_list'
+  modelName: 'reading_list',
+  indexes: [
+    {
+      unique: true,
+      fields: ['user_id', 'blog_id']
+    }
+  ]
 })
 
 module.exports = ReadingList

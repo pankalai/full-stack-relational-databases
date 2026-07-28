@@ -2,9 +2,9 @@
   "scripts": {
     "start": "node index.js",
     "dev": "nodemon index.js",
-    "test": "set TESTING=true&& node --test --test-concurrency=1 tests/api_ch3.test.js",
+    "test": "set TESTING=true&& node --test --test-concurrency=1",
     "start:test": "set TESTING=true&& node index.js",
-    "migration:down": "node util/rollback.js"  
+    "migration:down": "node util/rollback.js"
   },
   "dependencies": {
     "bcrypt": "^6.0.0",

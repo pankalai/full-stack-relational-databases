@@ -1,7 +1,7 @@
 const router = require('express').Router()
 const bcrypt = require('bcrypt')
 
-const { userExtractor } = require('../middleware/userExtractor')
+const { authorization } = require('../middleware/authorization')
 const { User, Blog, ReadingList } = require('../models')
 
 

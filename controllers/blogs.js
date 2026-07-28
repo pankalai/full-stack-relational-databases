@@ -5,7 +5,7 @@ const { Op } = require('sequelize')
 
 const { Blog, User } = require('../models')
 
-const { userExtractor } = require('../middleware/userExtractor')
+const { authorization } = require('../middleware/authorization')
 const { blogFinder } = require('../middleware/blogFinder')
 
 
@@ -44,7 +44,7 @@ router.get('/', async (req, res) => {
   res.json(blogs)
 })
 
-router.post('/', userExtractor, async (req, res, next) => {
+router.post('/', authorization, async (req, res, next) => {
 	try {
 		const blog = await Blog.create({...req.body, userId: req.user.id})
 		res.json(blog)
@@ -69,7 +69,7 @@ router.put('/:id', blogFinder(req => req.params.id), async (req, res, next) => {
 	}
 })
 
-router.delete('/:id', userExtractor, blogFinder(req => req.params.id), async (req, res, next) => {
+router.delete('/:id', authorization, blogFinder(req => req.params.id), async (req, res, next) => {
 	if (req.blog.UserId !== req.user.id) {
 			const error = new Error("Not allowed to delete")
 			error.status = 401
